@@ -1,0 +1,2 @@
+vstest-junit-logger
+===================
