@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Xml;
 using System.Xml.Serialization;
 using AlexKosau.BuildTools.JUnitLogger.JUnitSchema;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
@@ -114,8 +115,8 @@ namespace AlexKosau.BuildTools.JUnitLogger
                 {
                     new ErrorOrFailure
                     {
-                        Message = e.Result.ErrorMessage,
-                        Text = e.Result.ErrorStackTrace
+                        Message = new string(e.Result.ErrorMessage.Select(ch => XmlConvert.IsXmlChar(ch) ? ch : '?').ToArray()),
+                        Text = new string(e.Result.ErrorStackTrace.Select(ch => XmlConvert.IsXmlChar(ch) ? ch : '?').ToArray())
                     }
                 };
                 if (e.Result.Outcome == TestOutcome.Failed)
