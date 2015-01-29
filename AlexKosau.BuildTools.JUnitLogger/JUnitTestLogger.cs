@@ -99,7 +99,7 @@ namespace AlexKosau.BuildTools.JUnitLogger
                 Classname = GetClassName(e.Result.TestCase.FullyQualifiedName),
                 Status = e.Result.Outcome.ToString(),
                 Time = e.Result.Duration.TotalSeconds,
-                Skipped = (e.Result.Outcome == TestOutcome.Skipped).ToString()
+                //Skipped = (e.Result.Outcome == TestOutcome.Skipped).ToString()
             };
 
             IncludeErrorsAndFailures(e, testCase);
