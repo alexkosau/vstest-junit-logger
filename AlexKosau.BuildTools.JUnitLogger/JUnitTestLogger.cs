@@ -32,6 +32,8 @@ namespace AlexKosau.BuildTools.JUnitLogger
         /// <param name="testRunDirectory">Test Run Directory</param>
         public void Initialize(TestLoggerEvents events, string testRunDirectory)
         {
+            //Debugger.Launch();
+
             Initialize(events, new Dictionary<string, string>
             {
                 {"TestResultsFile", "TestResults.xml"},
@@ -41,6 +43,7 @@ namespace AlexKosau.BuildTools.JUnitLogger
 
         public void Initialize(TestLoggerEvents events, Dictionary<string, string> parameters)
         {
+            //Debugger.Launch();
             startupParameters = parameters;
             Trace.WriteLine("[JUnitLogger] Current dir: " + Environment.CurrentDirectory);
             foreach (var kv in parameters)
@@ -108,25 +111,29 @@ namespace AlexKosau.BuildTools.JUnitLogger
 
         private static void IncludeErrorsAndFailures(TestResultEventArgs e, TestCase testCase)
         {
-            if (!string.IsNullOrWhiteSpace(e.Result.ErrorMessage) ||
-                !string.IsNullOrWhiteSpace(e.Result.ErrorStackTrace))
+            var errorMessage = e.Result.ErrorMessage ?? string.Empty;
+            var errorStackTrace = e.Result.ErrorStackTrace ?? string.Empty;
+
+            if (string.IsNullOrWhiteSpace(errorMessage) && string.IsNullOrWhiteSpace(errorStackTrace))
             {
-                var err = new List<ErrorOrFailure>
-                {
-                    new ErrorOrFailure
-                    {
-                        Message = new string(e.Result.ErrorMessage.Select(ch => XmlConvert.IsXmlChar(ch) ? ch : '?').ToArray()),
-                        Text = new string(e.Result.ErrorStackTrace.Select(ch => XmlConvert.IsXmlChar(ch) ? ch : '?').ToArray())
-                    }
-                };
-                if (e.Result.Outcome == TestOutcome.Failed)
-                {
-                    testCase.Failures = err;
-                }
-                else
-                {
-                    testCase.Errors = err;
-                }
+                return;
+            }
+
+            var err = new List<ErrorOrFailure>
+                          {
+                              new ErrorOrFailure
+                                  {
+                                      Message = new string(errorMessage.Select(ch => XmlConvert.IsXmlChar(ch) ? ch : '?').ToArray()),
+                                      Text = new string(errorStackTrace.Select(ch => XmlConvert.IsXmlChar(ch) ? ch : '?').ToArray())
+                                  }
+                          };
+            if (e.Result.Outcome == TestOutcome.Failed)
+            {
+                testCase.Failures = err;
+            }
+            else
+            {
+                testCase.Errors = err;
             }
         }
 
@@ -193,7 +200,6 @@ namespace AlexKosau.BuildTools.JUnitLogger
                 Console.WriteLine("Total Passed: {0}", e.TestRunStatistics[TestOutcome.Passed]);
                 Console.WriteLine("Total Failed: {0}", e.TestRunStatistics[TestOutcome.Failed]);
                 Console.WriteLine("Total Skipped: {0}", e.TestRunStatistics[TestOutcome.Skipped]);
-
 
                 var root = new TestRun {TestSuites = new List<TestSuite>()};
 

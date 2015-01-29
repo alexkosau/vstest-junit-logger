@@ -63,7 +63,7 @@ namespace AlexKosau.BuildTools.JUnitLogger.JUnitSchema
 
     public class TestCase
     {
-        [XmlAttribute("skipped")]
+        //[XmlAttribute("skipped")] - Incorrect format for JUnit 5
         public string Skipped { get; set; }
 
         [XmlElement("error")]
