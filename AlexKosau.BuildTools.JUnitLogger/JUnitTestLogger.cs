@@ -45,7 +45,7 @@ namespace AlexKosau.BuildTools.JUnitLogger
 
         public void Initialize(TestLoggerEvents events, Dictionary<string, string> parameters)
         {
-            Debugger.Launch();
+            //Debugger.Launch();
 
             AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += ReflectionOnlyAssemblyResolve;
 
