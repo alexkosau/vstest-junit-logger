@@ -7,6 +7,15 @@ using System.Xml.Serialization;
 
 namespace AlexKosau.BuildTools.JUnitLogger.JUnitSchema
 {
+    public class Skipped
+    {
+        [XmlAttribute("message")]
+        public string Message { get; set; }
+
+        [XmlText]
+        public string Text { get; set; }
+    }
+
     public class ErrorOrFailure
     {
         [XmlAttribute("type")]
@@ -63,11 +72,14 @@ namespace AlexKosau.BuildTools.JUnitLogger.JUnitSchema
 
     public class TestCase
     {
-        [XmlAttribute("skipped")]
-        public string Skipped { get; set; }
+        //[XmlAttribute("skipped")]
+        //public string Skipped { get; set; }
 
         [XmlElement("error")]
         public List<ErrorOrFailure> Errors { get; set; }
+
+        [XmlElement("skipped")]
+        public Skipped Skipped { get; set; }
 
         [XmlElement("failure")]
         public List<ErrorOrFailure> Failures { get; set; }
